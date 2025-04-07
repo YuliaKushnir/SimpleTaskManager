@@ -35,6 +35,7 @@ public class WebSecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        System.out.println("----------- INSIDE SECURITY FILTER CHAIN -------------");
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(request -> request
@@ -48,6 +49,8 @@ public class WebSecurityConfiguration {
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
+        System.out.println("----------- INSIDE authenticationProvider -------------");
+
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(userService.userDetailsService());
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
@@ -61,6 +64,8 @@ public class WebSecurityConfiguration {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        System.out.println("----------- INSIDE authenticationManager -------------");
+
         return authenticationConfiguration.getAuthenticationManager();
     }
 
@@ -68,6 +73,8 @@ public class WebSecurityConfiguration {
     // --------------------- CORS ---------------------------
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+        System.out.println("----------- INSIDE corsConfigurationSource -------------");
+
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:4200"); // Дозволити клієнтський домен
         configuration.addAllowedMethod("*"); // Дозволити всі HTTP-методи

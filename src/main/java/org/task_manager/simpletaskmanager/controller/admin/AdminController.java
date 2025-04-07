@@ -1,11 +1,10 @@
 package org.task_manager.simpletaskmanager.controller.admin;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.task_manager.simpletaskmanager.dto.TaskDto;
 import org.task_manager.simpletaskmanager.service.admin.AdminService;
 
 @RestController
@@ -20,4 +19,30 @@ public class AdminController {
     public ResponseEntity<?> getUsers() {
         return ResponseEntity.ok(adminService.getUsers());
     }
+
+    @PostMapping("/task")
+    public ResponseEntity<TaskDto> createTask(@RequestBody TaskDto taskDto) {
+        TaskDto createdTaskDto = adminService.createTask(taskDto);
+        if(createdTaskDto == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdTaskDto);
+    }
+
+    @GetMapping("/tasks")
+    public ResponseEntity<?> getAllTasks() {
+        return ResponseEntity.ok(adminService.getAllTasks());
+    }
+
+    @DeleteMapping("/task/{id}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        adminService.deleteTask(id);
+        return ResponseEntity.ok(null);
+    }
+
+    @GetMapping("/task/{id}")
+    public ResponseEntity<TaskDto> getTaskById(@PathVariable Long id) {
+        return ResponseEntity.ok(adminService.getTaskById(id));
+    }
+
 }
