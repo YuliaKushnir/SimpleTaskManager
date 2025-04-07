@@ -5,18 +5,23 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.task_manager.simpletaskmanager.model.User;
+import org.task_manager.simpletaskmanager.repositories.UserRepository;
 
 import java.security.Key;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 @Component
+@RequiredArgsConstructor
 public class JwtUtil {
+
+    private final UserRepository userRepository;
 
     public String generateToken(UserDetails userDetails) {
 
@@ -66,5 +71,15 @@ public class JwtUtil {
         return extractClaim(token, Claims::getExpiration);
     }
 
+    public User getLoggedInUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null && authentication.isAuthenticated()) {
+            User user = (User) authentication.getPrincipal();
+            Optional<User> optionalUser = userRepository.findById(user.getId());
+            return optionalUser.orElse(null);
+        }
+
+        return null;
+    }
 
 }

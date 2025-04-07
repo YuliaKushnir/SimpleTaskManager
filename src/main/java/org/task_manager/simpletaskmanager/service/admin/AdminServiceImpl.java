@@ -76,5 +76,43 @@ public class AdminServiceImpl implements AdminService {
         return optionalTask.map(Task::getTaskDto).orElse(null);
     }
 
+    @Override
+    public TaskDto updateTask(Long id, TaskDto taskDto) {
+        Optional<Task> optionalTask = taskRepository.findById(id);
+        Optional<User> optionalUser = userRepository.findById(taskDto.getEmployeeId());
+        if (optionalTask.isPresent() && optionalUser.isPresent()) {
+            Task task = optionalTask.get();
+            task.setTitle(taskDto.getTitle());
+            task.setDescription(taskDto.getDescription());
+            task.setDueDate(taskDto.getDueDate());
+            task.setPriority(taskDto.getPriority());
+            task.setTaskStatus(mapStringToTaskStatus(String.valueOf(taskDto.getTaskStatus())));
+            task.setUser(optionalUser.get());
+
+            return taskRepository.save(task).getTaskDto();
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<TaskDto> searchTaskByTitle(String title) {
+        return taskRepository.findAllByTitleContaining(title)
+                .stream()
+                .sorted(Comparator.comparing(Task::getDueDate).reversed())
+                .map(Task::getTaskDto)
+                .collect(Collectors.toList());
+    }
+
+    private TaskStatus mapStringToTaskStatus(String status) {
+        return switch (status) {
+            case "PENDING" -> TaskStatus.PENDING;
+            case "IN_PROGRESS" -> TaskStatus.IN_PROGRESS;
+            case "COMPLETED" -> TaskStatus.COMPLETED;
+            case "DEFERRED" -> TaskStatus.DEFERRED;
+            default -> TaskStatus.CANCELLED;
+        };
+    }
+
 
 }

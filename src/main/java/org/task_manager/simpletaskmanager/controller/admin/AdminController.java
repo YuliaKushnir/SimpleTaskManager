@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import org.task_manager.simpletaskmanager.dto.TaskDto;
 import org.task_manager.simpletaskmanager.service.admin.AdminService;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin")
@@ -43,6 +45,21 @@ public class AdminController {
     @GetMapping("/task/{id}")
     public ResponseEntity<TaskDto> getTaskById(@PathVariable Long id) {
         return ResponseEntity.ok(adminService.getTaskById(id));
+    }
+
+    @PutMapping("/task/{id}")
+    public ResponseEntity<?> updateTask(@PathVariable Long id, @RequestBody TaskDto taskDto) {
+        TaskDto updatedTaskDto = adminService.updateTask(id, taskDto);
+
+        if(updatedTaskDto == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updatedTaskDto);
+    }
+
+    @GetMapping("/tasks/search/{title}")
+    public ResponseEntity<List<TaskDto>> searchTask(@PathVariable String title){
+        return ResponseEntity.ok(adminService.searchTaskByTitle(title));
     }
 
 }
