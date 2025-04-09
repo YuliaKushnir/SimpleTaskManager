@@ -1,5 +1,6 @@
 package org.task_manager.simpletaskmanager.service.admin;
 
+import org.task_manager.simpletaskmanager.dto.CommentDto;
 import org.task_manager.simpletaskmanager.dto.TaskDto;
 import org.task_manager.simpletaskmanager.dto.UserDto;
 
@@ -20,5 +21,7 @@ public interface AdminService {
     TaskDto updateTask(Long id, TaskDto taskDto);
 
     List<TaskDto> searchTaskByTitle(String title);
+
+    CommentDto createComment(Long taskId, String content);
 
 }
