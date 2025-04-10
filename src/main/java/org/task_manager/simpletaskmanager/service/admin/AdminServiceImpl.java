@@ -130,6 +130,11 @@ public class AdminServiceImpl implements AdminService {
         throw new EntityNotFoundException("User or task not found");
     }
 
+    @Override
+    public List<CommentDto> getCommentByTaskId(Long taskId) {
+        return commentRepository.findAllByTaskId(taskId).stream().map(Comment::getCommentDto).collect(Collectors.toList());
+    }
+
     private TaskStatus mapStringToTaskStatus(String status) {
         return switch (status) {
             case "PENDING" -> TaskStatus.PENDING;

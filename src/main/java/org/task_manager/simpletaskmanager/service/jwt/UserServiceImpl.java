@@ -5,7 +5,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.task_manager.simpletaskmanager.dto.TaskDto;
+import org.task_manager.simpletaskmanager.model.Task;
 import org.task_manager.simpletaskmanager.repositories.UserRepository;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,4 +26,6 @@ public class UserServiceImpl implements UserService {
             }
         };
     }
+
+
 }
